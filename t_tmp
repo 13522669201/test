@@ -166,3 +166,68 @@ select * from sys_user;
 create table JGCJ_JGQKB_WZ as
 select t.id,t.f1 jgmc, case when t.jgbm is null then t1.jgbm1 else t.jgbm end jgbm from JGCJ_JGQKB_WZ03 t
 left join t_tmp t1 on t.f1=trim(t1.jgmc0)
+-----------------------------------------
+1.如果HashMap未被初始化过，则初始化
+2.对Key求Hash值，然后再计算下标
+3.如果没有碰撞，直接放入桶中
+4.如果碰撞了，以链表的方式链接到后面
+5.如果链表长度超过阀值8，就把链表转成红黑树
+6.如果链表长度低于6，就把红黑树转回链表
+7.如果节点已经存在就替换旧值
+8.如果桶满了(容量16*加载因子0.75)，就需要resize(扩容2倍后重排）
+
+
+1.计算hash值
+2.找到对应的位置，根据情况进行∶
+2.1直接取值
+2.2红黑树里找值
+2.3遍历链表取值
+3.返回找到的结果\
+
+1.结构
+2.Hash碰撞（put）
+3.并发安全
+4.查询复杂度
+5.为什么超过8要转为红黑树?1 链表比红黑树存储空间小 2. 想要启动红黑树的概率是 千万分之一，可以看concrrentHashMap源码注释。
+
+
+阻塞方法
+	take()：读取并移除，空了则阻塞
+	put(): 插入，满了则阻塞
+
+add, remove, element:返回队列头元素，如果空  满了  则抛异常。
+offer, poll：取出并删除, peek：取出
+
+[root@localhost ~]# fdisk /dev/sda
+欢迎使用 fdisk (util-linux 2.23.2)。
+
+更改将停留在内存中，直到您决定将更改写入磁盘。
+使用写入命令前请三思。
+
+命令(输入 m 获取帮助)：n
+Partition type:
+   p   primary (2 primary, 0 extended, 2 free)
+   e   extended
+Select (default p):
+Using default response p
+分区号 (3,4，默认 3)：
+起始 扇区 (83886080-1048575999，默认为 83886080)：
+将使用默认值 83886080
+Last 扇区, +扇区 or +size{K,M,G} (83886080-1048575999，默认为 1048575999)：+85G
+分区 3 已设置为 Linux 类型，大小设为 85 GiB
+
+命令(输入 m 获取帮助)：w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+
+[root@localhost ~]# partprobe
+
+[root@localhost ~]# lvm
+lvm> pvcreate /dev/sda3
+  Physical volume "/dev/sda3" successfully created.
+
+vgextend  /dev/sda3 /dev/sda4
+
+
+
