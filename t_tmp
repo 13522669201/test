@@ -159,10 +159,3 @@ select * from t_tmp for update;
 select * from JGCJ_JGQKB_kqc where fzrxm='伍莉婷';
 
 
---JGCJ_JGQKB_WZ04 ==JGCJ_JGQKB_WZ03  t_tmp 合并得到=旧系统中的机构对应新系统的机构编码-------------------------------------------------------
-select * from t_tmp;
-select * from sys_user;
---------最终结果-------------------------------
-create table JGCJ_JGQKB_WZ as
-select t.id,t.f1 jgmc, case when t.jgbm is null then t1.jgbm1 else t.jgbm end jgbm from JGCJ_JGQKB_WZ03 t
-left join t_tmp t1 on t.f1=trim(t1.jgmc0)
